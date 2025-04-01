@@ -55,10 +55,8 @@ func initConfig() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 
+	// Persistent flags
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.todoClient.yaml)")
 	rootCmd.PersistentFlags().String("api-root",
 		"https://developer-api.govee.com/v1/devices", "Govee API URL")
@@ -69,6 +67,7 @@ func init() {
 	rootCmd.PersistentFlags().String("device-model",
 		"", "Govee Device Model")
 
+	// Parse environment vairables to find matching flag values
 	replacer := strings.NewReplacer("-", "_")
 	viper.SetEnvKeyReplacer(replacer)
 	viper.SetEnvPrefix("LIGHTS")

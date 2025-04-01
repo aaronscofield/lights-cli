@@ -1,4 +1,4 @@
-package cmd
+package govee
 
 import (
 	"bytes"
@@ -17,37 +17,6 @@ var (
 	ErrNotNumber       = errors.New("not a number")
 )
 
-type stateProperties map[string]interface{}
-
-type stateData struct {
-	Device     string            `json:"device"`
-	Model      string            `json:"model"`
-	Properties []stateProperties `json:"properties"`
-}
-
-type stateResponse struct {
-	Data    stateData `json:"data"`
-	Message string    `json:"message"`
-	Code    int       `json:"code"`
-}
-
-type turnResponse struct {
-	Code    int                    `json:"code"`
-	Message string                 `json:"message"`
-	Data    map[string]interface{} `json:"data,omitempty"`
-}
-
-type cmd struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
-}
-
-type body struct {
-	Device string `json:"device"`
-	Model  string `json:"model"`
-	Cmd    cmd    `json:"cmd"`
-}
-
 func newClient() *http.Client {
 	c := &http.Client{
 		Timeout: 10 * time.Second,
@@ -55,7 +24,7 @@ func newClient() *http.Client {
 	return c
 }
 
-func state(apiRoot string, apiKey string, deviceModel string, deviceId string) (stateResponse, error) {
+func State(apiRoot string, apiKey string, deviceModel string, deviceId string) (stateResponse, error) {
 	// Define the request with required headers
 	url := fmt.Sprintf("%s/state?device=%s&model=%s", apiRoot, deviceId, deviceModel)
 
@@ -78,7 +47,7 @@ func state(apiRoot string, apiKey string, deviceModel string, deviceId string) (
 	return resp, nil
 }
 
-func turn(apiRoot string, apiKey string, deviceModel string, deviceId string, operation string) (turnResponse, error) {
+func Turn(apiRoot string, apiKey string, deviceModel string, deviceId string, operation string) (turnResponse, error) {
 	// Construct the payload
 	body := body{
 		Device: deviceId,
