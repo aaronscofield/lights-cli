@@ -47,6 +47,26 @@ func State(apiRoot string, apiKey string, deviceModel string, deviceId string) (
 	return resp, nil
 }
 
+func Devices(apiRoot string, apiKey string) (devicesResponse, error) {
+	// Define the request with required headers
+	req, _ := http.NewRequest(http.MethodGet, apiRoot, nil)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("Govee-API-Key", apiKey)
+
+	// Execute the request
+	r, err := newClient().Do(req)
+	if err != nil {
+		fmt.Printf("%s", err.Error())
+	}
+
+	// Construct the response object
+	var resp devicesResponse
+	json.NewDecoder(r.Body).Decode(&resp)
+
+	fmt.Printf("%+v", resp)
+	return resp, nil
+}
+
 func Turn(apiRoot string, apiKey string, deviceModel string, deviceId string, operation string) (turnResponse, error) {
 	// Construct the payload
 	body := body{
